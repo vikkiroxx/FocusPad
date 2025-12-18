@@ -1,0 +1,47 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: var(--bg-color);
+}
+
+.card {
+    text-align: center;
+    padding: 2rem;
+    max-width: 400px;
+    width: 100%;
+}
+
+.title {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--primary-color);
+    letter-spacing: -1px;
+}
+
+.subtitle {
+    color: var(--secondary-text);
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+}
+
+.loginBtn {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: transform 0.1s ease, box-shadow 0.2s ease;
+    box-shadow: var(--shadow-sm);
+}
+
+.loginBtn:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.loginBtn:active {
+    transform: translateY(0);
+}

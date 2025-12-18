@@ -1,0 +1,219 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(2px);
+}
+
+.modal {
+    background-color: var(--card-bg);
+    width: 90%;
+    max-width: 600px;
+    border-radius: 12px;
+    box-shadow: var(--shadow-md);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    height: 80vh;
+    border: 1px solid var(--border-color);
+    position: relative;
+    overflow: visible;
+    /* For dropdown */
+}
+
+.titleInput {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin-bottom: 1rem;
+    outline: none;
+    font-family: inherit;
+    padding: 0 0.5rem;
+}
+
+.titleInput::placeholder {
+    color: var(--secondary-text);
+    opacity: 0.5;
+}
+
+/* Toolbar */
+.toolbar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+    flex-wrap: wrap;
+}
+
+.formatGroup {
+    display: flex;
+    gap: 0.25rem;
+    background-color: var(--bg-color);
+    padding: 2px;
+    border-radius: 20px;
+    border: 1px solid var(--border-color);
+}
+
+.divider {
+    width: 1px;
+    height: 24px;
+    background-color: var(--border-color);
+    margin: 0 0.25rem;
+}
+
+.toolBtn {
+    padding: 0;
+    border-radius: 50%;
+    border: 1px solid transparent;
+    background-color: transparent;
+    color: var(--text-color);
+    font-size: 1.1rem;
+    transition: all 0.2s;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toolBtn:hover {
+    background-color: var(--hover-color);
+    border-color: var(--border-color);
+}
+
+.formatGroup .toolBtn {
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
+}
+
+.fontSizeSelect {
+    border: none;
+    background: transparent;
+    color: var(--text-color);
+    font-family: inherit;
+    font-size: 0.9rem;
+    padding: 0 4px;
+    cursor: pointer;
+    outline: none;
+    border-radius: 4px;
+    height: 32px;
+    margin-left: 4px;
+}
+
+.fontSizeSelect:hover {
+    background-color: var(--hover-color);
+}
+
+.fontSizeSelect option {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+.addBtn {
+    background-color: var(--primary-color);
+    color: var(--card-bg);
+    /* Contrast text */
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s;
+}
+
+.addBtn:hover {
+    transform: rotate(90deg);
+}
+
+.dropdown {
+    position: relative;
+    margin-left: auto;
+}
+
+.toolsMenu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 0.5rem;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: var(--shadow-md);
+    min-width: 180px;
+    z-index: 2000;
+    overflow: hidden;
+    padding: 0.5rem 0;
+}
+
+.menuItem {
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: background-color 0.1s;
+    color: var(--text-color);
+}
+
+.menuItem:hover {
+    background-color: var(--hover-color);
+}
+
+.editor {
+    width: 100%;
+    border: none;
+    font-size: 1.1rem;
+    padding: 0;
+    outline: none;
+    background: transparent;
+    color: var(--text-color);
+    flex-grow: 1;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    line-height: 1.6;
+}
+
+/* Style for unordered list contenteditable */
+.editor ul {
+    padding-left: 20px;
+}
+
+.closeBtn {
+    align-self: flex-end;
+    padding: 8px 24px;
+    background-color: var(--primary-color);
+    color: #fff;
+    /* Usually primary is yellow, so text likely dark? */
+    font-weight: 600;
+    border-radius: 20px;
+    margin-top: 1rem;
+    box-shadow: var(--shadow-sm);
+}
+
+[data-theme="light"] .closeBtn {
+    color: #333;
+    /* Dark text on yellow button */
+}
+
+/* Adjust button text for dark mode accessibility */
+[data-theme="dark"] .toolBtn {
+    border-color: #555;
+}
