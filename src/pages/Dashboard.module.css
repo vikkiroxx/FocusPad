@@ -149,6 +149,11 @@
     margin-bottom: 1rem;
 }
 
+/* Force black text for highlighted elements to ensure readability in Dark Mode */
+.noteContent span[style*="background-color"] {
+    color: #000000 !important;
+}
+
 .noteActions {
     opacity: 0;
     transition: opacity 0.2s;

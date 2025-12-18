@@ -191,6 +191,11 @@
     line-height: 1.6;
 }
 
+/* Force black text for highlighted elements */
+.editor span[style*="background-color"] {
+    color: #000000 !important;
+}
+
 /* Style for unordered list contenteditable */
 .editor ul {
     padding-left: 20px;
