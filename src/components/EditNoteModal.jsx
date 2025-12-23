@@ -49,6 +49,14 @@ const EditNoteModal = ({ note, onClose }) => {
         return () => clearInterval(intervalId);
     }, [note]);
 
+    const handleMouseUp = () => {
+        saveSelection();
+        // Capture content on mouse up (e.g. after resizing an image)
+        if (editorRef.current) {
+            contentRef.current = editorRef.current.innerHTML;
+        }
+    };
+
     const handleInput = (e) => {
         const html = e.target.innerHTML;
         contentRef.current = html;
@@ -64,6 +72,10 @@ const EditNoteModal = ({ note, onClose }) => {
     };
 
     const handleClose = () => {
+        // Force sync from DOM to capture non-input changes (like resizing)
+        if (editorRef.current) contentRef.current = editorRef.current.innerHTML;
+        if (titleEditorRef.current) titleRef.current = titleEditorRef.current.innerHTML;
+
         if (contentRef.current !== note.content || titleRef.current !== note.title) {
             updateNote(note.id, {
                 content: contentRef.current,
@@ -283,7 +295,7 @@ const EditNoteModal = ({ note, onClose }) => {
                     className={styles.titleInput} // Use same class for now, might need tweaks
                     contentEditable
                     onInput={handleTitleInput}
-                    onMouseUp={saveSelection}
+                    onMouseUp={handleMouseUp}
                     onKeyUp={saveSelection}
                     suppressContentEditableWarning={true}
                     data-placeholder="Title"
@@ -365,7 +377,7 @@ const EditNoteModal = ({ note, onClose }) => {
                     contentEditable
                     onInput={handleInput}
                     onClick={handleEditorClick}
-                    onMouseUp={saveSelection}
+                    onMouseUp={handleMouseUp}
                     onKeyUp={saveSelection}
                     onPaste={handlePaste}
                     suppressContentEditableWarning={true}
