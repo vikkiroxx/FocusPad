@@ -113,11 +113,10 @@ const Dashboard = () => {
                             className={styles.noteCard}
                             onClick={() => handleNoteClick(note)}
                         >
-                            {note.title && <div className={styles.noteTitle}>{note.title}</div>}
-                            <div
-                                className={styles.noteContent}
-                                dangerouslySetInnerHTML={{ __html: note.content || '' }}
-                            />
+                            <div className={styles.noteTitle}>
+                                {note.title || <em style={{ opacity: 0.6 }}>Untitled Note</em>}
+                            </div>
+
                             <div className={styles.noteActions}>
                                 <button onClick={(e) => handleDelete(e, note.id)} className={styles.iconBtn}>
                                     🗑️
@@ -129,6 +128,10 @@ const Dashboard = () => {
 
                 {loading && <p>Loading notes...</p>}
                 {!loading && notes.length === 0 && <p className={styles.emptyState}>No notes yet. Add one!</p>}
+
+                <footer className={styles.footer}>
+                    FocusPad v{__APP_VERSION__}
+                </footer>
 
                 {selectedNote && (
                     <EditNoteModal
