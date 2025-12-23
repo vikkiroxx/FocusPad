@@ -113,9 +113,10 @@ const Dashboard = () => {
                             className={styles.noteCard}
                             onClick={() => handleNoteClick(note)}
                         >
-                            <div className={styles.noteTitle}>
-                                {note.title || <em style={{ opacity: 0.6 }}>Untitled Note</em>}
-                            </div>
+                            <div
+                                className={styles.noteTitle}
+                                dangerouslySetInnerHTML={{ __html: note.title || '<em style="opacity: 0.6">Untitled Note</em>' }}
+                            />
 
                             <div className={styles.noteActions}>
                                 <button onClick={(e) => handleDelete(e, note.id)} className={styles.iconBtn}>

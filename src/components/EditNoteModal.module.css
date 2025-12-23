@@ -38,12 +38,20 @@
     margin-bottom: 1rem;
     outline: none;
     font-family: inherit;
-    padding: 0 0.5rem;
+    padding: 0.5rem;
+    min-height: 2.5rem;
+    /* Ensure clickability if empty */
+    line-height: 1.4;
+    cursor: text;
 }
 
-.titleInput::placeholder {
+.titleInput:empty:before {
+    content: attr(data-placeholder);
     color: var(--secondary-text);
     opacity: 0.5;
+    cursor: text;
+    display: block;
+    /* For some browsers */
 }
 
 /* Toolbar */

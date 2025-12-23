@@ -5,6 +5,7 @@ import styles from './EditNoteModal.module.css';
 const EditNoteModal = ({ note, onClose }) => {
     const [content, setContent] = useState(note.content);
     const editorRef = useRef(null);
+    const titleEditorRef = useRef(null);
     const contentRef = useRef(note.content); // Keep track of latest content for auto-save
     const [showTools, setShowTools] = useState(false);
     const [title, setTitle] = useState(note.title || "");
@@ -15,6 +16,9 @@ const EditNoteModal = ({ note, onClose }) => {
     useEffect(() => {
         if (editorRef.current) {
             editorRef.current.innerHTML = note.content || "";
+        }
+        if (titleEditorRef.current) {
+            titleEditorRef.current.innerHTML = note.title || "";
         }
     }, []);
 
@@ -50,10 +54,11 @@ const EditNoteModal = ({ note, onClose }) => {
         saveSelection();
     };
 
-    const handleTitleChange = (e) => {
-        const newTitle = e.target.value;
-        titleRef.current = newTitle;
-        setTitle(newTitle);
+    const handleTitleInput = (e) => {
+        const html = e.target.innerHTML;
+        titleRef.current = html;
+        setTitle(html);
+        saveSelection();
     };
 
     const handleClose = () => {
@@ -76,12 +81,14 @@ const EditNoteModal = ({ note, onClose }) => {
 
         document.execCommand(command, false, value);
 
-        // Update content ref and save selection, but DO NOT force focus back
-        // to avoid bringing up keyboard on mobile
+        // Update both refs to be safe, as we don't know which one changed
         if (editorRef.current) {
             contentRef.current = editorRef.current.innerHTML;
-            saveSelection();
         }
+        if (titleEditorRef.current) {
+            titleRef.current = titleEditorRef.current.innerHTML;
+        }
+        saveSelection();
     };
 
     const handleToolSelect = (e, tool, value = null) => {
@@ -179,12 +186,15 @@ const EditNoteModal = ({ note, onClose }) => {
         <div className={styles.overlay} onClick={handleClose}>
             <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
 
-                <input
-                    type="text"
+                <div
+                    ref={titleEditorRef}
                     className={styles.titleInput}
-                    placeholder="Title"
-                    value={title}
-                    onChange={handleTitleChange}
+                    contentEditable
+                    onInput={handleTitleInput}
+                    onMouseUp={saveSelection}
+                    onKeyUp={saveSelection}
+                    suppressContentEditableWarning={true}
+                    data-placeholder="Title"
                 />
 
                 <div className={styles.toolbar}>
