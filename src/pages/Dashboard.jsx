@@ -15,7 +15,7 @@ const Dashboard = () => {
     // State
     const [notes, setNotes] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [newNoteContent, setNewNoteContent] = useState("");
+    const [newNoteTitle, setNewNoteTitle] = useState("");
     const [isCreating, setIsCreating] = useState(false);
 
     // Derive selected note from URL
@@ -40,10 +40,10 @@ const Dashboard = () => {
 
     const handleCreateNote = async (e) => {
         e.preventDefault();
-        if (!newNoteContent.trim()) return;
+        if (!newNoteTitle.trim()) return;
 
-        await createNote(newNoteContent);
-        setNewNoteContent("");
+        await createNote("", newNoteTitle); // Pass as Title, empty content
+        setNewNoteTitle("");
         setIsCreating(false);
     };
 
@@ -84,15 +84,19 @@ const Dashboard = () => {
                 <div className={styles.createArea} onClick={() => setIsCreating(true)}>
                     {isCreating ? (
                         <div className={styles.createForm}>
-                            <textarea
+                            <input
+                                type="text"
                                 className={styles.createInput}
-                                placeholder="Take a note..."
+                                placeholder="Title"
                                 autoFocus
-                                value={newNoteContent}
-                                onChange={(e) => setNewNoteContent(e.target.value)}
+                                value={newNoteTitle}
+                                onChange={(e) => setNewNoteTitle(e.target.value)}
                                 onBlur={() => {
                                     // Optional: Auto-save on blur if content exists
-                                    if (!newNoteContent.trim()) setIsCreating(false);
+                                    if (!newNoteTitle.trim()) setIsCreating(false);
+                                }}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') handleCreateNote(e);
                                 }}
                             />
                             <div className={styles.createActions}>
