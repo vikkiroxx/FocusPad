@@ -109,6 +109,9 @@ const EditNoteModal = ({ note, onClose }) => {
             case 'fontSize':
                 execCmd('fontSize', value);
                 break;
+            case 'fontName':
+                execCmd('fontName', value);
+                break;
             case 'highlight':
                 execCmd('hiliteColor', '#fff59d'); // Yellow highlight
                 break;
@@ -218,6 +221,19 @@ const EditNoteModal = ({ note, onClose }) => {
                             <option value="3">Normal</option>
                             <option value="5">Large</option>
                             <option value="7">Huge</option>
+                        </select>
+                        <select
+                            className={styles.fontFamilySelect}
+                            onChange={(e) => handleToolSelect(e, 'fontName', e.target.value)}
+                            title="Font Family"
+                            defaultValue="Outfit"
+                        >
+                            <option value="Outfit">Default</option>
+                            <option value="Arial">Arial</option>
+                            <option value="Times New Roman">Times New Roman</option>
+                            <option value="Courier New">Courier New</option>
+                            <option value="Georgia">Georgia</option>
+                            <option value="Verdana">Verdana</option>
                         </select>
                     </div>
                     <div className={styles.divider}></div>
