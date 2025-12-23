@@ -12,6 +12,8 @@ const EditNoteModal = ({ note, onClose }) => {
     const titleRef = useRef(note.title || "");
     const selectionRef = useRef(null); // Store the cursor position/selection
 
+    const fileInputRef = useRef(null);
+
     // Initial render of content
     useEffect(() => {
         if (editorRef.current) {
@@ -73,7 +75,7 @@ const EditNoteModal = ({ note, onClose }) => {
 
     const execCmd = (command, value = null) => {
         // Restore selection if we have one
-        if (selectionRef.current) {
+        if (selectionRef.current && document.contains(selectionRef.current.commonAncestorContainer)) {
             const selection = window.getSelection();
             selection.removeAllRanges();
             selection.addRange(selectionRef.current);
@@ -89,6 +91,81 @@ const EditNoteModal = ({ note, onClose }) => {
             titleRef.current = titleEditorRef.current.innerHTML;
         }
         saveSelection();
+    };
+
+    const insertCompressedImage = (file) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+
+                // Max width for compression
+                const MAX_WIDTH = 800;
+                if (width > MAX_WIDTH) {
+                    height *= MAX_WIDTH / width;
+                    width = MAX_WIDTH;
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+
+                const dataUrl = canvas.toDataURL('image/jpeg', 0.7); // Compress
+
+                // Construct HTML for resizeable image
+                // Using a span wrapper with resize:both for manual stretching
+                const wrapperStyle = "display: inline-block; overflow: hidden; resize: both; width: 200px; vertical-align: bottom; border: 1px dashed var(--border-color); position: relative;";
+                const imgStyle = "width: 100%; height: 100%; object-fit: contain; pointer-events: none; display: block;";
+
+                const html = `<span style="${wrapperStyle}" contenteditable="false"><img src="${dataUrl}" style="${imgStyle}"></span>&nbsp;`;
+
+                // Restore selection before inserting
+                if (selectionRef.current) {
+                    const selection = window.getSelection();
+                    selection.removeAllRanges();
+                    selection.addRange(selectionRef.current);
+                }
+
+                // Focus editor if not focused (fallback)
+                if (!document.activeElement.contains(editorRef.current)) {
+                    editorRef.current.focus();
+                }
+
+                document.execCommand('insertHTML', false, html);
+
+                // Update refs
+                if (editorRef.current) {
+                    contentRef.current = editorRef.current.innerHTML;
+                }
+                saveSelection();
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    };
+
+    const handleImageUpload = (e) => {
+        const file = e.target.files[0];
+        if (file && file.type.startsWith('image/')) {
+            insertCompressedImage(file);
+        }
+        e.target.value = ''; // Reset input
+    };
+
+    const handlePaste = (e) => {
+        const items = e.clipboardData.items;
+        for (let i = 0; i < items.length; i++) {
+            if (items[i].type.indexOf('image') !== -1) {
+                e.preventDefault();
+                const blob = items[i].getAsFile();
+                insertCompressedImage(blob);
+                return; // Stop after first image
+            }
+        }
     };
 
     const handleToolSelect = (e, tool, value = null) => {
@@ -123,7 +200,11 @@ const EditNoteModal = ({ note, onClose }) => {
                 alert('Drawing tool coming soon!');
                 break;
             case 'image':
-                alert('Image upload coming soon!');
+                // This is now handled by the specific handler below, but kept for safety/reference
+                fileInputRef.current.click();
+                break;
+            case 'photo':
+                alert('Photo capture coming soon!');
                 break;
             default:
                 break;
@@ -189,9 +270,17 @@ const EditNoteModal = ({ note, onClose }) => {
         <div className={styles.overlay} onClick={handleClose}>
             <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
 
+                <input
+                    type="file"
+                    ref={fileInputRef}
+                    style={{ display: 'none' }}
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                />
+
                 <div
                     ref={titleEditorRef}
-                    className={styles.titleInput}
+                    className={styles.titleInput} // Use same class for now, might need tweaks
                     contentEditable
                     onInput={handleTitleInput}
                     onMouseUp={saveSelection}
@@ -252,7 +341,11 @@ const EditNoteModal = ({ note, onClose }) => {
                                 <div className={styles.menuItem} onMouseDown={(e) => handleToolSelect(e, 'drawing')}>
                                     <span>🎨</span> Drawing
                                 </div>
-                                <div className={styles.menuItem} onMouseDown={(e) => handleToolSelect(e, 'image')}>
+                                <div className={styles.menuItem} onMouseDown={(e) => {
+                                    e.preventDefault();
+                                    fileInputRef.current.click();
+                                    setShowTools(false);
+                                }}>
                                     <span>🖼️</span> Add Image
                                 </div>
                                 <div className={styles.menuItem} onMouseDown={(e) => handleToolSelect(e, 'photo')}>
@@ -274,6 +367,7 @@ const EditNoteModal = ({ note, onClose }) => {
                     onClick={handleEditorClick}
                     onMouseUp={saveSelection}
                     onKeyUp={saveSelection}
+                    onPaste={handlePaste}
                     suppressContentEditableWarning={true}
                 />
 
