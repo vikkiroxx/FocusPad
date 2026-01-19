@@ -15,6 +15,7 @@ const Dashboard = () => {
     // State
     const [notes, setNotes] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [newNoteTitle, setNewNoteTitle] = useState("");
     const [isCreating, setIsCreating] = useState(false);
 
@@ -23,11 +24,39 @@ const Dashboard = () => {
     const selectedNote = notes.find(n => n.id === noteId) || null;
 
     useEffect(() => {
-        const unsubscribe = subscribeToNotes((fetchedNotes) => {
-            setNotes(fetchedNotes);
-            setLoading(false);
-        });
-        return unsubscribe;
+        // Reset state on user change
+        setLoading(true);
+        setError(null);
+
+        // Safety timeout: stop loading after 10 seconds
+        const timeoutId = setTimeout(() => {
+            setLoading(prev => {
+                if (prev) {
+                    setError(new Error("Request timed out. Please check your connection."));
+                    return false;
+                }
+                return prev;
+            });
+        }, 10000);
+
+        const unsubscribe = subscribeToNotes(
+            (fetchedNotes) => {
+                setNotes(fetchedNotes);
+                setLoading(false);
+                clearTimeout(timeoutId);
+            },
+            (err) => {
+                console.error("Subscription error:", err);
+                setError(err);
+                setLoading(false);
+                clearTimeout(timeoutId);
+            }
+        );
+
+        return () => {
+            unsubscribe();
+            clearTimeout(timeoutId);
+        };
     }, [currentUser]);
 
     const handleLogout = async () => {
@@ -42,9 +71,13 @@ const Dashboard = () => {
         e.preventDefault();
         if (!newNoteTitle.trim()) return;
 
-        await createNote("", newNoteTitle); // Pass as Title, empty content
-        setNewNoteTitle("");
-        setIsCreating(false);
+        try {
+            await createNote("", newNoteTitle); // Pass as Title, empty content
+            setNewNoteTitle("");
+            setIsCreating(false);
+        } catch (err) {
+            alert("Failed to create note. Please try again.");
+        }
     };
 
     const handleDelete = async (e, id) => {
@@ -109,6 +142,12 @@ const Dashboard = () => {
                         </div>
                     )}
                 </div>
+
+                {error && (
+                    <div className={styles.errorBanner} style={{ color: 'red', textAlign: 'center', margin: '20px 0' }}>
+                        Error loading notes: {error.message}
+                    </div>
+                )}
 
                 <div className={styles.grid}>
                     {notes.map(note => (

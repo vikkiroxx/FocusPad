@@ -65,9 +65,12 @@ export const updateNote = async (noteId, data) => {
     }
 };
 
-export const subscribeToNotes = (callback) => {
+export const subscribeToNotes = (callback, onError) => {
     const user = auth.currentUser;
-    if (!user) return () => { };
+    if (!user) {
+        if (onError) onError(new Error("User not authenticated"));
+        return () => { };
+    }
 
     const notesRef = getNotesCollection();
     const q = query(notesRef, orderBy("createdAt", "desc"));
@@ -78,5 +81,8 @@ export const subscribeToNotes = (callback) => {
             ...doc.data()
         }));
         callback(notes);
+    }, (error) => {
+        console.error("Error fetching notes:", error);
+        if (onError) onError(error);
     });
 };
