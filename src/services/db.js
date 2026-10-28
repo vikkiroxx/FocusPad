@@ -86,3 +86,26 @@ export const subscribeToNotes = (callback, onError) => {
         if (onError) onError(error);
     });
 };
+
+export const updateNotesOrder = async (orderedNotes) => {
+    try {
+        const user = auth.currentUser;
+        if (!user) return;
+
+        // Cache order in localStorage for instant retrieval
+        localStorage.setItem(`focuspad_order_${user.uid}`, JSON.stringify(orderedNotes.map(n => n.id)));
+
+        // Update order in Firestore
+        const updates = orderedNotes.map((note, index) => {
+            const noteRef = doc(db, "users", user.uid, "notes", note.id);
+            return updateDoc(noteRef, {
+                order: index
+            }).catch(err => {
+                console.warn(`Could not update order for note ${note.id}`, err);
+            });
+        });
+        await Promise.all(updates);
+    } catch (error) {
+        console.error("Error updating notes order:", error);
+    }
+};

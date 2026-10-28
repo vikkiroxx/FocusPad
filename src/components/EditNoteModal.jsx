@@ -202,7 +202,7 @@ const EditNoteModal = ({ note, onClose }) => {
                 execCmd('fontName', value);
                 break;
             case 'highlight':
-                execCmd('hiliteColor', '#fff59d'); // Yellow highlight
+                execCmd('hiliteColor', '#FFE5BF'); // Amber Ignite warm highlight
                 break;
             case 'checkbox':
                 const checkboxHtml = '&nbsp;<input type="checkbox" style="transform: scale(1.2); margin-right: 8px;">&nbsp;';
