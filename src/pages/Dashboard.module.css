@@ -1,55 +1,107 @@
 .container {
     min-height: 100vh;
+    background: var(--bg-gradient);
     background-color: var(--bg-color);
+    background-attachment: fixed;
+    transition: background-color 0.3s ease;
 }
 
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 2rem;
+    padding: 1rem 2.5rem;
     border-bottom: 1px solid var(--border-color);
     background-color: var(--header-bg);
     position: sticky;
     top: 0;
     z-index: 100;
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .logo {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     font-weight: 700;
     color: var(--primary-color);
     letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    user-select: none;
+}
+
+.logoDot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--accent-color);
+    box-shadow: 0 0 10px var(--accent-color);
+    display: inline-block;
 }
 
 .userControls {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 1.25rem;
 }
 
 .userName {
     color: var(--secondary-text);
-    font-size: 0.9rem;
+    font-size: 0.92rem;
+    font-weight: 500;
+}
+
+.themeBtn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    background-color: var(--card-bg);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    font-size: 1.15rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+}
+
+.themeBtn:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent-color);
+    box-shadow: var(--shadow-md);
 }
 
 .logoutBtn {
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 1.1rem;
     border: 1px solid var(--border-color);
-    border-radius: 4px;
+    border-radius: 20px;
     font-size: 0.9rem;
-    transition: background-color 0.2s;
+    font-weight: 500;
+    background-color: var(--card-bg);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    color: var(--text-color);
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
 }
 
 .logoutBtn:hover {
     background-color: var(--hover-color);
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    transform: translateY(-1px);
 }
 
 .main {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 2.5rem 2rem;
 }
 
 /* Create Note Area */
@@ -57,22 +109,34 @@
     max-width: 600px;
     margin: 0 auto 3rem;
     background-color: var(--card-bg);
-    border-radius: 8px;
-    box-shadow: var(--shadow-sm);
-    transition: box-shadow 0.2s;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 18px;
+    box-shadow: var(--shadow-md);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     overflow: hidden;
     border: 1px solid var(--border-color);
 }
 
 .createArea:hover {
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary-color);
 }
 
 .createPlaceholder {
-    padding: 12px 16px;
+    padding: 16px 20px;
     color: var(--secondary-text);
     font-weight: 500;
     cursor: text;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.createPlaceholder::after {
+    content: '✏️';
+    opacity: 0.7;
+    font-size: 1rem;
 }
 
 .createForm {
@@ -82,25 +146,46 @@
 .createInput {
     width: 100%;
     border: none;
-    padding: 16px;
-    font-size: 1rem;
+    padding: 18px 20px 10px;
+    font-size: 1.05rem;
     resize: none;
     outline: none;
-    min-height: 100px;
+    min-height: 80px;
     display: block;
     background-color: transparent;
     color: var(--text-color);
 }
 
 .createActions {
-    padding: 8px 16px;
-    text-align: right;
+    padding: 10px 20px 14px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.createDoneBtn {
+    background: var(--primary-color);
+    color: #FFFFFF;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 6px 18px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 56, 189, 0.25);
+    transition: all 0.2s ease;
+}
+
+.createDoneBtn:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 56, 189, 0.35);
 }
 
 /* Grid */
 .grid {
     column-count: 1;
-    column-gap: 1rem;
+    column-gap: 1.25rem;
 }
 
 @media (min-width: 600px) {
@@ -118,76 +203,311 @@
 .noteCard {
     break-inside: avoid;
     background-color: var(--card-bg);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
     border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 1rem;
-    margin-bottom: 1rem;
+    border-radius: 16px;
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
     box-shadow: var(--shadow-sm);
-    transition: box-shadow 0.2s, transform 0.1s;
-    cursor: default;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer;
     position: relative;
     white-space: pre-wrap;
     word-wrap: break-word;
+    user-select: none;
 }
 
 .noteCard:hover {
+    transform: translateY(-3px);
     box-shadow: var(--shadow-md);
+    border-color: var(--accent-color);
 }
 
+/* Drag and Drop States */
+.reorderHint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: var(--secondary-text);
+    margin: -1.75rem auto 2.25rem;
+    padding: 6px 16px;
+    border-radius: 20px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    max-width: fit-content;
+    box-shadow: var(--shadow-sm);
+    user-select: none;
+}
+
+.reorderHintIcon {
+    color: var(--accent-color);
+    font-size: 0.95rem;
+}
+
+.dragBadge {
+    position: absolute;
+    top: -10px;
+    right: 14px;
+    background: var(--accent-color);
+    color: #FFFFFF;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(239, 142, 1, 0.4);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    user-select: none;
+    pointer-events: none;
+    z-index: 10;
+    animation: popIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes popIn {
+    from {
+        opacity: 0;
+        transform: translateY(4px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.isDraggable {
+    border-color: var(--accent-color) !important;
+    box-shadow: 0 0 0 2px var(--accent-color), var(--shadow-lg) !important;
+    cursor: grab !important;
+    transform: translateY(-4px) scale(1.02);
+}
+
+.isDragging {
+    opacity: 0.45;
+    transform: scale(0.96);
+    cursor: grabbing !important;
+    border: 2px dashed var(--accent-color) !important;
+}
+
+.dragOver {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 2px var(--primary-color), var(--shadow-lg) !important;
+    transform: scale(1.03);
+}
 
 .noteTitle {
-    font-size: 1.1rem;
+    font-size: 1.15rem;
     font-weight: 600;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
     color: var(--text-color);
+    line-height: 1.4;
 }
 
 .noteContent {
-    font-size: 1rem;
-    line-height: 1.5;
+    font-size: 0.98rem;
+    line-height: 1.55;
     color: var(--text-color);
     margin-bottom: 1rem;
 }
 
-/* Force black text for highlighted elements to ensure readability in Dark Mode */
+/* Ensure highlighted elements have high contrast */
 .noteContent span[style*="background-color"] {
     color: #000000 !important;
 }
 
 .noteActions {
     opacity: 0;
-    transition: opacity 0.2s;
+    transition: opacity 0.2s ease;
     display: flex;
     justify-content: flex-end;
+    margin-top: 0.5rem;
+    position: relative;
+    z-index: 5;
 }
 
 .noteCard:hover .noteActions {
     opacity: 1;
 }
 
+@media (hover: none) {
+    .noteActions {
+        opacity: 0.85;
+    }
+}
+
 .iconBtn {
-    padding: 4px;
-    font-size: 1.1rem;
+    width: 32px;
+    height: 32px;
+    padding: 6px;
+    border-radius: 8px;
     color: var(--secondary-text);
-    opacity: 0.7;
-    transition: opacity 0.2s;
+    opacity: 0.75;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: transparent;
+    border: none;
 }
 
 .iconBtn:hover {
     opacity: 1;
+    background-color: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    transform: scale(1.12);
 }
 
 .emptyState {
     text-align: center;
     color: var(--secondary-text);
-    margin-top: 4rem;
+    margin: 5rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.emptyIcon {
+    font-size: 2.5rem;
+    color: var(--accent-color);
+    opacity: 0.9;
 }
 
 .footer {
     text-align: center;
-    padding: 2rem;
+    padding: 2.5rem 0 1rem;
     color: var(--secondary-text);
-    opacity: 0.5;
-    font-size: 0.8rem;
-    margin-top: 2rem;
+    opacity: 0.8;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.footerDot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+}
+
+/* Confirmation Dialog */
+.confirmOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--modal-overlay);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3000;
+    animation: fadeIn 0.2s ease;
+}
+
+.confirmModal {
+    background-color: var(--card-bg);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 2rem;
+    max-width: 420px;
+    width: 90%;
+    box-shadow: var(--shadow-lg);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: scaleIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.confirmIconWrapper {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: rgba(239, 68, 68, 0.12);
+    color: #ef4444;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15);
+}
+
+.confirmTitle {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin: 0 0 0.5rem;
+    letter-spacing: -0.3px;
+}
+
+.confirmMessage {
+    font-size: 0.95rem;
+    color: var(--secondary-text);
+    margin: 0 0 1.5rem;
+    line-height: 1.5;
+}
+
+.confirmNotePreview {
+    font-weight: 600;
+    color: var(--text-color);
+    display: block;
+    margin-top: 6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 300px;
+}
+
+.confirmActions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    width: 100%;
+}
+
+.cancelBtn {
+    padding: 10px 22px;
+    border-radius: 20px;
+    border: 1px solid var(--border-color);
+    background: transparent;
+    color: var(--text-color);
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.cancelBtn:hover {
+    background-color: var(--hover-color);
+    transform: translateY(-1px);
+}
+
+.deleteConfirmBtn {
+    padding: 10px 24px;
+    border-radius: 20px;
+    border: none;
+    background: #ef4444;
+    color: #FFFFFF;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
+    transition: all 0.2s ease;
+}
+
+.deleteConfirmBtn:hover {
+    background: #dc2626;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(239, 68, 68, 0.45);
 }
